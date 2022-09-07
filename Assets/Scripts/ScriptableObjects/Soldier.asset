@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f71c672ac6cdf4428159be70913f69c, type: 3}
-  m_Name: EnemySoldier2
-  m_EditorClassIdentifier: Assembly-CSharp::UnitStats
-  unitName: Enemigo
-  unitDescription: Un minion enemigo.
-  attackPoints: 2
-  healthPoints: 15
-  defensePoints: 4
-  movementPoints: 20
-  actionPoints: 20
+  m_Name: Soldier
+  m_EditorClassIdentifier: 
+  soldierAttackPoints: 4
+  soldierHealthPoints: 20
+  soldierDefensePoints: 6
+  soldierMovementPoints: 25
+  soldierActionPoints: 25
+  heroAttackPoints: 0
+  heroHealthPoints: 0
+  heroDefensePoints: 0
+  heroMovementPoints: 0
+  heroActionPoints: 0
