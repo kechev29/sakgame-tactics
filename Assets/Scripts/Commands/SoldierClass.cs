@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoldierClass : Commands
+public class SoldierClass : MonoBehaviour
 {
     [SerializeField] private UnitsStats unitsStats;
 
 
-    public virtual void Attack()
+    public void Attack()
     {
-
+        Debug.Log("Attack");
     }
-    public virtual void Move()
+    public void Move()
     {
-
+        Debug.Log("Move");
     }
 }
