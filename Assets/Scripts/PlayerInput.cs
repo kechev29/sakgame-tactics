@@ -4,27 +4,26 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] SoldierClass unit;
+    SoldierClass unit;
     [SerializeField] CommandInvoker invoker;
 
     bool canCommand;
 
     private void Awake()
     {
-        invoker.onDequeueEnd += ToggleCommand;
+        invoker.onDequeueEnd += ToggleCommand; //toggle command gets triggered at the event the invoker broadcasts when it finishes the command queue
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        canCommand = true;
+        canCommand = true; //the player can command at the start of the game
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         if (canCommand)
         {
+            // COMMAND INPUTS
             if (Input.GetKeyDown(KeyCode.A))
             {
                 IAction attackAction = new AttackAction(unit);
@@ -37,22 +36,28 @@ public class PlayerInput : MonoBehaviour
                 invoker.AddAction(moveAction);
                 Debug.Log("Move queued");
             }
-
+            // START COMMAND DEQUEUE
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Debug.Log("Dequeue");
                 invoker.StartCommands();
-                canCommand = false;
+                canCommand = false; //player can't interact while the invoker is busy
             }
         }
 
     }
 
-    private void ToggleCommand()
+    //returns player input once the invoker finishes
+    private void ToggleCommand() 
     {
         Debug.Log("End command list");
         invoker.EndCommands();
         canCommand = true;
     }
 
+    //method to encapsulate the unit field
+    public void SetUnit(SoldierClass newUnit)
+    {
+        unit = newUnit;
+    }
 }

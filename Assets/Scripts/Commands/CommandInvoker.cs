@@ -8,7 +8,7 @@ public class CommandInvoker : MonoBehaviour //needed the monobehaviour so i can 
     //queue so actions are handed out in the order they were selected (first in, first out)
     Queue<IAction> actionList = new Queue<IAction>();
 
-    //event triggered when queue ends in order to return control to player
+    //event triggered when queue ends in order to change turn and return control to player
     public event Action onDequeueEnd;
 
 
