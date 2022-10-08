@@ -12,13 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f71c672ac6cdf4428159be70913f69c, type: 3}
   m_Name: Soldier
   m_EditorClassIdentifier: 
-  soldierAttackPoints: 4
+  soldierAttackPoints: 7
   soldierHealthPoints: 20
-  soldierDefensePoints: 6
-  soldierMovementPoints: 25
-  soldierActionPoints: 25
-  heroAttackPoints: 0
-  heroHealthPoints: 0
-  heroDefensePoints: 0
-  heroMovementPoints: 0
-  heroActionPoints: 0
+  soldierDefensePoints: 5
+  soldierMovementPoints: 5
+  soldierActionPoints: 5
+  isHero: 0

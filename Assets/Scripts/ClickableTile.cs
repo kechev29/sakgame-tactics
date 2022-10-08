@@ -14,7 +14,7 @@ public class ClickableTile : MonoBehaviour {
 		if(EventSystem.current.IsPointerOverGameObject())
 			return;
 
-		map.GeneratePathTo(tileX, tileY);
+		map.BroadcastClickedTile(tileX, tileY);
 	}
 
 }

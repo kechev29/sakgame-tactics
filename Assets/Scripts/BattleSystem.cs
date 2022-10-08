@@ -60,6 +60,8 @@ public class BattleSystem : MonoBehaviour
     //changes the current unit for the player input controller
     private void SetUnit()
     {
+        Debug.Log("Turn: " + currentUnit.name);
+
         input.SetUnit(currentUnit);
     }
 
@@ -67,7 +69,38 @@ public class BattleSystem : MonoBehaviour
     private void NextUnit()
     {
         counter += 1;
-        currentUnit = allUnits[counter % allUnits.Count]; //using % makes the list starts over once it reaches the end
-        SetUnit();
+        if(allUnits[counter % allUnits.Count].isAlive == false)
+        {
+            SoldierClass unit = allUnits[counter % allUnits.Count];
+            allUnits.Remove(unit);
+        }
+
+        if (allUnits.Count > 1 && CheckUnitList())
+        {
+            currentUnit = allUnits[counter % allUnits.Count]; //using % makes the list starts over once it reaches the end
+            SetUnit();
+        }
+        else
+        {
+            Debug.Log("Game over");
+            input.enabled = false;
+        }
+        
+    }
+
+    private bool CheckUnitList()
+    {
+        bool enemyFound = false;
+        bool notEnemyFound = false;
+
+        foreach (SoldierClass unit in allUnits)
+        {
+            if (unit.IsEnemy) enemyFound = true;
+            else notEnemyFound = true;
+
+            if (enemyFound && notEnemyFound) return true;
+        }
+
+        return false;
     }
 }

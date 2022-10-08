@@ -1,26 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class TileMap : MonoBehaviour {
 
-	public GameObject selectedUnit;
+	//public GameObject selectedUnit;
 
 	public TileType[] tileTypes;
 
-	int[,] tiles;
-	Node[,] graph;
+	public int[,] tiles;
+	public Node[,] graph;
 
+	public event Action<int, int> OnTileClick;
 
 	int mapSizeX = 40;
 	int mapSizeY = 40;
 
-	void Start() {
-		// Setup the selectedUnit's variable
-		selectedUnit.GetComponent<Unit>().tileX = (int)selectedUnit.transform.position.x;
-		selectedUnit.GetComponent<Unit>().tileY = (int)selectedUnit.transform.position.y;
-		selectedUnit.GetComponent<Unit>().map = this;
-
+	void Awake() {
 		GenerateMapData();
 		GeneratePathfindingGraph();
 		GenerateMapVisual();
@@ -209,16 +206,17 @@ public class TileMap : MonoBehaviour {
 		// We could test the unit's walk/hover/fly type against various
 		// terrain flags here to see if they are allowed to enter the tile.
 
-		return tileTypes[ tiles[x,y] ].isWalkable;
+		return tileTypes[ tiles[x,y] ].isWalkable && graph[x, y].walkable;
 	}
 
-	public void GeneratePathTo(int x, int y) {
+	private List<Node> GeneratePathTo(int sourceX, int sourceY, int targetX, int targetY, Unit unit) {
 		// Clear out our unit's old path.
-		selectedUnit.GetComponent<Unit>().currentPath = null;
+		unit.currentPath = null;
 
-		if( UnitCanEnterTile(x,y) == false ) {
+		if( UnitCanEnterTile(targetX,targetY) == false ) {
+			
 			// We probably clicked on a mountain or something, so just quit out.
-			return;
+			return null;
 		}
 
 		Dictionary<Node, float> dist = new Dictionary<Node, float>();
@@ -228,13 +226,13 @@ public class TileMap : MonoBehaviour {
 		List<Node> unvisited = new List<Node>();
 		
 		Node source = graph[
-		                    selectedUnit.GetComponent<Unit>().tileX, 
-		                    selectedUnit.GetComponent<Unit>().tileY
+		                    sourceX,
+		                    sourceY
 		                    ];
 		
 		Node target = graph[
-		                    x, 
-		                    y
+		                    targetX, 
+		                    targetY
 		                    ];
 		
 		dist[source] = 0;
@@ -284,7 +282,7 @@ public class TileMap : MonoBehaviour {
 
 		if(prev[target] == null) {
 			// No route between our target and the source
-			return;
+			return null;
 		}
 
 		List<Node> currentPath = new List<Node>();
@@ -302,7 +300,43 @@ public class TileMap : MonoBehaviour {
 
 		currentPath.Reverse();
 
-		selectedUnit.GetComponent<Unit>().currentPath = currentPath;
+		return currentPath;
+
+		//selectedUnit.GetComponent<Unit>().currentPath = currentPath;
 	}
+
+	public List<Node> CheckPathPrice(int sourceX, int sourceY, int targetX, int targetY, int availablePoints, Unit unit)
+    {
+		List<Node> path = GeneratePathTo(sourceX, sourceY, targetX, targetY, unit);
+
+		float currentPrice = ReturnPathPrice(sourceX, sourceY, targetX, targetY, unit);
+
+		if (currentPrice <= availablePoints) {
+			return path; 
+		}
+		else return null;
+	}
+
+	public float ReturnPathPrice(int sourceX, int sourceY, int targetX, int targetY, Unit unit)
+	{
+		List<Node> path = GeneratePathTo(sourceX, sourceY, targetX, targetY, unit);
+
+		float currentPrice = 0;
+
+		if (path != null)
+		{
+			for (int i = 0; i < path.Count - 1; i++)
+			{
+				currentPrice += CostToEnterTile(path[i].x, path[i].y, path[i + 1].x, path[i + 1].y);
+			}
+		}
+
+		return currentPrice;
+	}
+
+	public void BroadcastClickedTile(int X, int Y)
+    {
+		OnTileClick?.Invoke(X, Y);
+    }
 
 }
