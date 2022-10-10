@@ -10,6 +10,11 @@ public class Unit : MonoBehaviour {
 	// animations, we are going to be somewhere in between tiles.
 	public int tileX;
 	public int tileY;
+	public int maxhealth;
+	public HealthBar healthbar;
+	public GameObject damageText;
+
+	private int curhealth;
 
 	public TileMap map;
 
@@ -20,17 +25,27 @@ public class Unit : MonoBehaviour {
 	int moveSpeed = 4;
 	float remainingMovement= 4;
 
-
     private void Awake()
     {
 		tileX = (int)transform.position.x;
 		tileY = (int)transform.position.y;
     }
 
-    private void Start()
+    void Start()
     {
 		SetNotWalkable();
+		curhealth = maxhealth;
 	}
+
+
+	public void takedamage(int damage)
+    {
+		curhealth -= damage;
+		healthbar.UpdateHealth((float)curhealth / (float)maxhealth);
+
+		DamageIndicator indicator = Instantiate(damageText, transform.position, Quaternion.identity).GetComponent<DamageIndicator>();
+		indicator.SetDamageText(damage);
+    }
 
 
     void Update() {
