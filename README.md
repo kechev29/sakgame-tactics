@@ -3,6 +3,8 @@
 ## Contribuciones
 Mapa & Pathfinding - Sebastian Osorio, Andrés Gomez
 
+Interfaz - Andrés Gomez
+
 Personajes - Sebastian Osorio
 
 Habilidades - Kyle Echeverri
